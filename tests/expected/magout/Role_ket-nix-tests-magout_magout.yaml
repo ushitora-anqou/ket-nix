@@ -1,0 +1,71 @@
+apiVersion: "rbac.authorization.k8s.io/v1"
+kind: "Role"
+metadata:
+  labels:
+    app.kubernetes.io/managed-by: "Helmraiser"
+  name: "ket-nix-tests-magout"
+  namespace: "magout"
+rules:
+- apiGroups:
+  - ""
+  resources:
+  - "pods"
+  verbs:
+  - "create"
+  - "delete"
+  - "get"
+  - "list"
+  - "patch"
+  - "update"
+  - "watch"
+- apiGroups:
+  - "apps"
+  resources:
+  - "deployments"
+  verbs:
+  - "create"
+  - "delete"
+  - "get"
+  - "list"
+  - "patch"
+  - "update"
+  - "watch"
+- apiGroups:
+  - "batch"
+  resources:
+  - "cronjobs"
+  - "jobs"
+  verbs:
+  - "create"
+  - "delete"
+  - "get"
+  - "list"
+  - "patch"
+  - "update"
+  - "watch"
+- apiGroups:
+  - "magout.anqou.net"
+  resources:
+  - "mastodonservers"
+  verbs:
+  - "create"
+  - "delete"
+  - "get"
+  - "list"
+  - "patch"
+  - "update"
+  - "watch"
+- apiGroups:
+  - "magout.anqou.net"
+  resources:
+  - "mastodonservers/finalizers"
+  verbs:
+  - "update"
+- apiGroups:
+  - "magout.anqou.net"
+  resources:
+  - "mastodonservers/status"
+  verbs:
+  - "get"
+  - "patch"
+  - "update"

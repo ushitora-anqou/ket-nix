@@ -1,0 +1,79 @@
+apiVersion: "apps/v1"
+kind: "Deployment"
+metadata:
+  annotations: {}
+  labels:
+    app.kubernetes.io/managed-by: "Helmraiser"
+  name: "ket-nix-tests-magout-gateway"
+  namespace: "magout"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/component: "gateway"
+      app.kubernetes.io/name: "nginx"
+      app.kubernetes.io/part-of: "mastodon"
+      magout.anqou.net/mastodon-server: "ket-nix-tests-magout"
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/component: "gateway"
+        app.kubernetes.io/name: "nginx"
+        app.kubernetes.io/part-of: "mastodon"
+        magout.anqou.net/mastodon-server: "ket-nix-tests-magout"
+    spec:
+      containers:
+      - image: "nginxinc/nginx-unprivileged:1"
+        name: "nginx"
+        ports:
+        - containerPort: 8080
+          name: "http"
+          protocol: "TCP"
+        resources: {}
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - "ALL"
+        volumeMounts:
+        - mountPath: "/mnt/public"
+          name: "mnt-public"
+          readOnly: true
+        - mountPath: "/etc/nginx/conf.d"
+          name: "nginx-conf"
+          readOnly: true
+        - mountPath: "/var/cache/nginx"
+          name: "nginx-cache"
+      initContainers:
+      - command:
+        - "bash"
+        - "-c"
+        - |
+          cp -ra /opt/mastodon/public/* /mnt/public/
+        image: "ghcr.io/mastodon/mastodon:v4.2.12"
+        name: "copy-assets"
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - "ALL"
+        volumeMounts:
+        - mountPath: "/mnt/public"
+          name: "mnt-public"
+      securityContext:
+        runAsGroup: 991
+        runAsNonRoot: true
+        runAsUser: 991
+        seccompProfile:
+          type: "RuntimeDefault"
+      volumes:
+      - emptyDir: {}
+        name: "mnt-public"
+      - configMap:
+          items:
+          - key: "nginx.conf"
+            path: "mastodon.conf"
+          name: "ket-nix-tests-magout-gateway-nginx-conf"
+        name: "nginx-conf"
+      - emptyDir: {}
+        name: "nginx-cache"

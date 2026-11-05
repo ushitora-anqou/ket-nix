@@ -1,0 +1,57 @@
+apiVersion: "apps/v1"
+kind: "Deployment"
+metadata:
+  labels:
+    app.kubernetes.io/instance: "ket-nix-tests"
+    app.kubernetes.io/managed-by: "Helmraiser"
+    app.kubernetes.io/name: "magout"
+    app.kubernetes.io/version: "0.1.29"
+    helm.sh/chart: "magout-0.1.41"
+  name: "ket-nix-tests-magout-operator"
+  namespace: "magout"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/instance: "ket-nix-tests"
+      app.kubernetes.io/name: "magout"
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/instance: "ket-nix-tests"
+        app.kubernetes.io/managed-by: "Helm"
+        app.kubernetes.io/name: "magout"
+        app.kubernetes.io/version: "0.1.29"
+        helm.sh/chart: "magout-0.1.41"
+    spec:
+      containers:
+      - args:
+        - "-namespace=magout"
+        image: "ghcr.io/ushitora-anqou/magout:0.1.29"
+        imagePullPolicy: "IfNotPresent"
+        livenessProbe:
+          httpGet:
+            path: "/healthz"
+            port: "probe"
+        name: "magout"
+        ports:
+        - containerPort: 8081
+          name: "probe"
+          protocol: "TCP"
+        readinessProbe:
+          httpGet:
+            path: "/readyz"
+            port: "probe"
+        resources: {}
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - "ALL"
+      securityContext:
+        runAsGroup: 65532
+        runAsNonRoot: true
+        runAsUser: 65532
+        seccompProfile:
+          type: "RuntimeDefault"
+      serviceAccountName: "ket-nix-tests-magout"

@@ -1,0 +1,15 @@
+apiVersion: "rbac.authorization.k8s.io/v1"
+kind: "RoleBinding"
+metadata:
+  labels:
+    app.kubernetes.io/managed-by: "Helmraiser"
+  name: "ket-nix-tests-magout"
+  namespace: "magout"
+roleRef:
+  apiGroup: "rbac.authorization.k8s.io"
+  kind: "Role"
+  name: "ket-nix-tests-magout"
+subjects:
+- kind: "ServiceAccount"
+  name: "ket-nix-tests-magout"
+  namespace: "magout"

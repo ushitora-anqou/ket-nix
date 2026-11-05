@@ -1,0 +1,50 @@
+apiVersion: "magout.anqou.net/v1"
+kind: "MastodonServer"
+metadata:
+  labels:
+    app.kubernetes.io/managed-by: "Helmraiser"
+  name: "ket-nix-tests-magout"
+  namespace: "magout"
+spec:
+  sidekiq:
+    image: "ghcr.io/mastodon/mastodon:v4.2.12"
+    podSecurityContext:
+      runAsGroup: 991
+      runAsNonRoot: true
+      runAsUser: 991
+      seccompProfile:
+        type: "RuntimeDefault"
+    replicas: 1
+    securityContext:
+      allowPrivilegeEscalation: false
+      capabilities:
+        drop:
+        - "ALL"
+  streaming:
+    image: "ghcr.io/mastodon/mastodon:v4.2.12"
+    podSecurityContext:
+      runAsGroup: 991
+      runAsNonRoot: true
+      runAsUser: 991
+      seccompProfile:
+        type: "RuntimeDefault"
+    replicas: 1
+    securityContext:
+      allowPrivilegeEscalation: false
+      capabilities:
+        drop:
+        - "ALL"
+  web:
+    image: "ghcr.io/mastodon/mastodon:v4.2.12"
+    podSecurityContext:
+      runAsGroup: 991
+      runAsNonRoot: true
+      runAsUser: 991
+      seccompProfile:
+        type: "RuntimeDefault"
+    replicas: 1
+    securityContext:
+      allowPrivilegeEscalation: false
+      capabilities:
+        drop:
+        - "ALL"
