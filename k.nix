@@ -9,18 +9,27 @@
   }:
     pkgs.stdenv.mkDerivation {
       name = "helm-chart-${name}-${version}";
-      nativeBuildInputs = with pkgs; [curl yq-go cacert];
+      nativeBuildInputs = with pkgs; [curl yq-go cacert kubernetes-helm];
       dontUnpack = true;
       buildPhase = ''
         runHook preBuild
-        chart_url=$(\
-          curl -fsSL "${repo}/index.yaml" | \
-          yq '.entries."${name}"[] | select(.version == "${version}") | .urls[0]' \
-        )
-        if ! echo "$chart_url" | grep -E "^https:" > /dev/null; then
-          chart_url="${repo}/$chart_url"
+        if echo "${repo}" | grep -E "^https:" > /dev/null; then
+          chart_url=$(\
+            curl -fsSL "${repo}/index.yaml" | \
+            yq '.entries."${name}"[] | select(.version == "${version}") | .urls[0]' \
+          )
+          if ! echo "$chart_url" | grep -E "^https:" > /dev/null; then
+            chart_url="${repo}/$chart_url"
+          fi
+          curl -fsSL -o "$out" "$chart_url"
+        elif echo "${repo}" | grep -E "^oci:"; then
+          mkdir tmp
+          helm pull "${repo}/${name}" --version "${version}" --destination .
+          ls
+          mv "${name}-${version}.tgz" $out
+        else
+          exit 1
         fi
-        curl -fsSL -o "$out" "$chart_url"
         runHook postBuild
       '';
       outputHashAlgo = "sha256";

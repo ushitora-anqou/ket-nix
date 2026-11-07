@@ -14,4 +14,4 @@ test:
 
 .PHONY: generate-test-expected
 generate-test-expected:
-	cd tests ; nix build . ; rm -rf expected ; rsync -r result/ expected/ ; chmod -R go+rX expected
+	cd tests ; nix build . ; rm -rf expected ; mkdir expected ; rsync -r result/ expected/ ; chmod -R "=rw,+X" expected

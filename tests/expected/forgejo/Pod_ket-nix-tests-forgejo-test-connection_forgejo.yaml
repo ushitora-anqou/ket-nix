@@ -1,0 +1,30 @@
+apiVersion: "v1"
+kind: "Pod"
+metadata:
+  annotations:
+    helm.sh/hook: "test"
+  labels:
+    app: "forgejo"
+    app.kubernetes.io/instance: "ket-nix-tests"
+    app.kubernetes.io/managed-by: "Helmraiser"
+    app.kubernetes.io/name: "forgejo"
+    app.kubernetes.io/version: "15.0.11"
+    helm.sh/chart: "forgejo-17.3.2"
+    version: "15.0.11"
+  name: "ket-nix-tests-forgejo-test-connection"
+  namespace: "forgejo"
+spec:
+  containers:
+  - args:
+    - |
+      for i in $(seq 1 20); do
+        wget -T 5 -O /dev/null 'ket-nix-tests-forgejo-http:3000' && exit 0
+        sleep 3
+      done
+      exit 1
+    command:
+    - "sh"
+    - "-c"
+    image: "busybox:latest"
+    name: "wget"
+  restartPolicy: "Never"

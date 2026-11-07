@@ -3,3 +3,9 @@ name = "magout"
 repo = "https://ushitora-anqou.github.io/magout"
 version = "0.1.41"
 hash = "sha256-Yrjc90NwYDi1uKbwYGRrb/31eoaAfcMUHAn6k/KaUbI="
+
+[chart.forgejo]
+name = "forgejo"
+repo = "oci://code.forgejo.org/forgejo-helm"
+version = "17.3.2"
+hash = "sha256-qOlk22CJla8AV60C2pM735YZ50Agiy0Hoft/8vwxv4o="
