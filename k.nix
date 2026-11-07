@@ -592,4 +592,34 @@ in rec {
       inherit path type;
     };
   };
+
+  vmPodScrape = {
+    name,
+    namespace,
+    spec,
+  }: {
+    apiVersion = "operator.victoriametrics.com/v1beta1";
+    kind = "VMPodScrape";
+    metadata = {
+      inherit name namespace;
+    };
+    inherit spec;
+  };
+
+  probeTCPSocket = {
+    port,
+    initialDelaySeconds ? null,
+    periodSeconds ? null,
+  }: {
+    inherit initialDelaySeconds periodSeconds;
+    tcpSocket = {
+      inherit port;
+    };
+  };
+
+  configMapRef = {name}: {
+    configMapRef = {
+      inherit name;
+    };
+  };
 }
