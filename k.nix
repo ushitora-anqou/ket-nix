@@ -631,4 +631,30 @@ in rec {
       inherit name;
     };
   };
+
+  probeHttpGet = {
+    path,
+    port,
+  }: {
+    httpGet = {
+      inherit path port;
+    };
+  };
+
+  recreate = {
+    type = "Recreate";
+  };
+
+  vmServiceScrape = {
+    name,
+    namespace,
+    spec,
+  }: {
+    apiVersion = "operator.victoriametrics.com/v1beta1";
+    kind = "VMServiceScrape";
+    metadata = {
+      inherit name namespace;
+    };
+    inherit spec;
+  };
 }
