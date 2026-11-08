@@ -657,4 +657,46 @@ in rec {
     };
     inherit spec;
   };
+
+  cronJob = {
+    name,
+    schedule,
+    containers,
+    namespace ? null,
+    timeZone ? null,
+    concurrencyPolicy ? null,
+    successfulJobsHistoryLimit ? null,
+    restartPolicy ? null,
+    volumes ? null,
+    nodeSelector ? null,
+    securityContext ? null,
+    serviceAccountName ? null,
+    suspend ? null,
+    podLabels ? null,
+    tolerations ? null,
+  }: {
+    apiVersion = "batch/v1";
+    kind = "CronJob";
+    metadata = {
+      inherit name namespace;
+    };
+    spec = {
+      inherit suspend timeZone schedule concurrencyPolicy successfulJobsHistoryLimit;
+      jobTemplate = {
+        spec = {
+          template = {
+            metadata =
+              if podLabels == null
+              then null
+              else {
+                labels = podLabels;
+              };
+            spec = {
+              inherit restartPolicy volumes containers nodeSelector securityContext serviceAccountName tolerations;
+            };
+          };
+        };
+      };
+    };
+  };
 }
