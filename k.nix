@@ -699,4 +699,43 @@ in rec {
       };
     };
   };
+
+  cnpgCluster = {
+    name,
+    spec,
+  }: {
+    apiVersion = "postgresql.cnpg.io/v1";
+    kind = "Cluster";
+    metadata = {
+      inherit name;
+      annotations = {
+        "admission.ket.anqou.net/prevent-deletion" = "true";
+      };
+    };
+    inherit spec;
+  };
+
+  cnpgObjectStore = {
+    name,
+    spec,
+  }: {
+    apiVersion = "barmancloud.cnpg.io/v1";
+    kind = "ObjectStore";
+    metadata = {
+      inherit name;
+    };
+    inherit spec;
+  };
+
+  cnpgScheduledBackup = {
+    name,
+    spec,
+  }: {
+    apiVersion = "postgresql.cnpg.io/v1";
+    kind = "ScheduledBackup";
+    metadata = {
+      inherit name;
+    };
+    inherit spec;
+  };
 }
