@@ -27,7 +27,7 @@
       builtins.mapAttrs (system: pkgs: {
         default = pkgs.mkShell {
           packages = with pkgs; [
-            (python3.withPackages (p: with p; [pyyaml requests tomlkit]))
+            (python3.withPackages (p: with p; [pyyaml requests tomlkit semver]))
             ruff
           ];
         };
