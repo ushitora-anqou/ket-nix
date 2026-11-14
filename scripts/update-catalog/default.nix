@@ -9,7 +9,13 @@ stdenv.mkDerivation {
   src = ./.;
   nativeBuildInputs = [];
   buildInputs = [
-    (python3.withPackages (p: with p; [pyyaml requests tomlkit]))
+    (python3.withPackages (p:
+      with p; [
+        pyyaml
+        requests
+        semver
+        tomlkit
+      ]))
   ];
   installPhase = ''
     mkdir -p $out/bin
